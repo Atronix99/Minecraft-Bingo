@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft Bingo</title>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script> 
+    <script defer src="/scripts/bingo.js"></script>
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Minecraft Bingo</h1>
+
+        <div id="bingo-board"></div>
+        
+        <div class="button-group">
+            <button onclick="generateBoard()">Generuj nową planszę</button>
+            <button id="download-board-btn">Pobierz planszę jako obraz</button>
+        </div>
+        
+        <div class="import-export-section">
+            <h2>Udostępnianie planszy</h2>
+            <textarea id="board-code-input" rows="3" placeholder="Wklej tutaj kod planszy, aby ją zaimportować..."></textarea>
+            <div class="button-group share-buttons">
+                <button onclick="exportBoard()">Eksportuj kod</button>
+                <button onclick="importBoard()">Importuj kod</button>
+            </div>
+        </div>
+        
+        <a href="losowanie.html" class="other-mode-link">Przejdź do Generatora Drużyn</a>
+    </div>
+
+    <div id="custom-popup" class="popup-container main-popup">
+        <div class="popup-content">
+            <span class="close-btn" onclick="closeCustomPopup('custom-popup')">&times;</span>
+            <h3>Twój kod planszy:</h3>
+            <p id="popup-board-code"></p>
+            <button onclick="copyToClipboardAndClose()">Kopiuj i Zamknij</button>
+        </div>
+    </div>
+
+    <div id="notification-popup" class="popup-container notification-popup">
+        <div class="notification-content">
+            <p id="notification-message"></p>
+        </div>
+    </div>
+    
+</body>
+</html>

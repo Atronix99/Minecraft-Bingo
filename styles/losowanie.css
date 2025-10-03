@@ -1,0 +1,113 @@
+body {
+    font-family: Poppins, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    background-color: #36393F;
+    color: #DCDDDE;
+    margin: 0;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+.container {
+    background-color: #2F3136;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+}
+
+h1 {
+    color: #7289DA;
+    margin-bottom: 20px;
+}
+
+.input-section, .results-section {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+textarea, input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #40444B;
+    border-radius: 4px;
+    background-color: #40444B;
+    color: #DCDDDE;
+    resize: vertical;
+}
+
+input[type="number"] {
+    width: 80px;
+    margin-bottom: 15px;
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.button-group button {
+    flex-grow: 1;
+    padding: 12px;
+    font-size: 1em;
+    background-color: #7289DA;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.button-group button:hover {
+    background-color: #677BC4;
+}
+
+#results {
+    background-color: #40444B;
+    border: 1px solid #4E525A;
+    padding: 15px;
+    border-radius: 4px;
+    min-height: 100px;
+    text-align: left;
+    white-space: pre-wrap;
+}
+
+.team-name {
+    color: #7289DA;
+    font-weight: bold;
+    margin-top: 10px;
+    display: block;
+    font-size: 1.1em;
+}
+
+.single-winner {
+    color: #43B581;
+    font-size: 1.5em;
+    font-weight: bold;
+    text-align: center;
+}
+
+.back-link {
+    display: inline-block;
+    margin-top: 20px;
+    color: #99AAB5;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.back-link:hover {
+    color: #DCDDDE;
+}
