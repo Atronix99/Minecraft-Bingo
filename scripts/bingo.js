@@ -155,22 +155,27 @@ function generateBoard(fixedItems = null) {
             showNotification(`Błąd: Za mało przedmiotów difficulty 3. Potrzeba ${required_3}.`, 5000);
             return;
         }
-        
+
         const pool3 = getAvailableItems(3, required_3);
         
-        const rows = Array.from({ length: BOARD_SIZE }, (_, i) => i);
-        const cols = Array.from({ length: BOARD_SIZE }, (_, i) => i);
-        shuffle(rows); 
-        shuffle(cols); 
+        const col_indices = Array.from({ length: BOARD_SIZE }, (_, i) => i);
+        shuffle(col_indices); 
         
-        for (let i = 0; i < BOARD_SIZE; i++) {
-            const r = rows[i]; 
-            const c = cols[i];
-            const item = pool3[i];
+        for (let r = 0; r < BOARD_SIZE; r++) {
+            const c = col_indices[r]; 
+            const item = pool3[r];
             
             board[r][c] = item;
             usedIndices[3].push(itemsByWeight[3].findIndex(i => i.name === item.name)); 
         }
+
+        const rowCount = { 1: Array(BOARD_SIZE).fill(0), 2: Array(BOARD_SIZE).fill(0) };
+        const colCount = { 1: Array(BOARD_SIZE).fill(0), 2: Array(BOARD_SIZE).fill(0) };
+        
+        const MIN_WEIGHT_1 = 2; 
+        const MAX_WEIGHT_1 = 3; 
+        const MIN_WEIGHT_2 = 2; 
+        const MAX_WEIGHT_2 = 3; 
 
         for (let r = 0; r < BOARD_SIZE; r++) {
             for (let c = 0; c < BOARD_SIZE; c++) {
@@ -182,33 +187,56 @@ function generateBoard(fixedItems = null) {
                 
                 const needed_2 = required_2 - current_2;
                 const needed_1 = required_1 - current_1;
-                
-                const min_2_needed = Math.max(0, needed_2 - (remainingCells - 1));
-                const max_2_allowed = Math.min(itemsByWeight[2].length - usedIndices[2].length, needed_2);
-                
-                const min_1_needed = Math.max(0, needed_1 - (remainingCells - 1));
-                const max_1_allowed = Math.min(itemsByWeight[1].length - usedIndices[1].length, needed_1);
 
                 let selectedWeight = null;
+                
+                const mustBe2Global = needed_2 > 0 && needed_2 === remainingCells; 
+                const mustBe2Row = rowCount[2][r] < MIN_WEIGHT_2 && rowCount[1][r] === MAX_WEIGHT_1; 
+                const mustBe2Col = colCount[2][c] < MIN_WEIGHT_2 && colCount[1][c] === MAX_WEIGHT_1; 
+                
+                const mustBe1Global = needed_1 > 0 && needed_1 === remainingCells; 
+                const mustBe1Row = rowCount[1][r] < MIN_WEIGHT_1 && rowCount[2][r] === MAX_WEIGHT_2; 
+                const mustBe1Col = colCount[1][c] < MIN_WEIGHT_1 && colCount[2][c] === MAX_WEIGHT_2; 
 
-                if (min_2_needed > 0 || (max_2_allowed > 0 && Math.random() < 0.7 && max_1_allowed === 0)) {
+                if (mustBe2Global || mustBe2Row || mustBe2Col) {
                     selectedWeight = 2;
-                } else if (min_1_needed > 0 || max_1_allowed > 0) {
-                    selectedWeight = 1; 
-                } else if (max_2_allowed > 0) {
-                    selectedWeight = 2;
+                } else if (mustBe1Global || mustBe1Row || mustBe1Col) {
+                    selectedWeight = 1;
                 } else {
-                     boardElement.innerHTML = 'Błąd: Wyczerpano dostępne przedmioty difficulty 1 lub 2.';
-                     showNotification('Błąd: Wyczerpano dostępne przedmioty difficulty 1 lub 2.', 4000);
-                     return;
+                    const canBe2 = rowCount[2][r] < MAX_WEIGHT_2 && colCount[2][c] < MAX_WEIGHT_2 && needed_2 > 0;
+                    const canBe1 = rowCount[1][r] < MAX_WEIGHT_1 && colCount[1][c] < MAX_WEIGHT_1 && needed_1 > 0;
+
+                    if (canBe2 && canBe1) {
+                         selectedWeight = Math.random() < 0.7 ? 2 : 1; 
+                    } else if (canBe2) {
+                        selectedWeight = 2;
+                    } else if (canBe1) {
+                        selectedWeight = 1;
+                    } else {
+                        boardElement.innerHTML = 'Błąd: Niespełnione warunki alokacji 1/2. Zresetuj planszę.';
+                        showNotification('Błąd: Niespełnione warunki alokacji 1/2. Zresetuj planszę.', 5000);
+                        return;
+                    }
                 }
                 
-                const itemPool = getAvailableItems(selectedWeight, 1);
-                if (itemPool.length === 0) {
-                    continue; 
+                if (getAvailableItems(selectedWeight, 1).length === 0) {
+                     const otherWeight = selectedWeight === 1 ? 2 : 1;
+                     if (getAvailableItems(otherWeight, 1).length > 0) {
+                         selectedWeight = otherWeight;
+                     } else {
+                         boardElement.innerHTML = 'Błąd: Wyczerpano dostępne przedmioty! Zresetuj planszę.';
+                         showNotification('Błąd: Wyczerpano dostępne przedmioty! Zresetuj planszę.', 5000);
+                         return;
+                     }
                 }
+
+                const itemPool = getAvailableItems(selectedWeight, 1);
                 const item = itemPool[0];
+                
                 board[r][c] = item;
+                rowCount[selectedWeight][r]++;
+                colCount[selectedWeight][c]++;
+                
                 usedIndices[selectedWeight].push(itemsByWeight[selectedWeight].findIndex(i => i.name === item.name)); 
             }
         }
