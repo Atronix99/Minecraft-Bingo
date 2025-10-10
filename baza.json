@@ -655,6 +655,26 @@
     "difficulty": 2
   },
   {
+    "name": "Enchanted_Leather_Boots",
+    "image": "images/2/Enchanted_Leather_Boots.gif",
+    "difficulty": 2
+  },
+  {
+    "name": "Enchanted_Leather_Cap",
+    "image": "images/2/Enchanted_Leather_Cap.gif",
+    "difficulty": 2
+  },
+  {
+    "name": "Enchanted_Leather_Pants",
+    "image": "images/2/Enchanted_Leather_Pants.gif",
+    "difficulty": 2
+  },
+  {
+    "name": "Enchanted_Leather_Tunic",
+    "image": "images/2/Enchanted_Leather_Tunic.gif",
+    "difficulty": 2
+  },
+  {
     "name": "Ender_Pearl",
     "image": "images/2/Ender_Pearl.png",
     "difficulty": 2
@@ -945,6 +965,11 @@
     "difficulty": 3
   },
   {
+    "name": "Ominous_Bottle",
+    "image": "images/3/Ominous_Bottle.png",
+    "difficulty": 3
+  },
+  {
     "name": "Open_Eyeblossom",
     "image": "images/3/Open_Eyeblossom.png",
     "difficulty": 3
@@ -952,11 +977,6 @@
   {
     "name": "Packed_Ice",
     "image": "images/3/Packed_Ice.png",
-    "difficulty": 3
-  },
-  {
-    "name": "Ominous_Bottle",
-    "image": "images/3/Ominous_Bottle.png",
     "difficulty": 3
   },
   {

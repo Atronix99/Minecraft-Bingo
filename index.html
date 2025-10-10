@@ -13,6 +13,14 @@
 <body>
     <div class="container">
         <h1>Minecraft Bingo</h1>
+        
+        <div class="difficulty-select-group">
+            <label for="difficulty-select">Wybierz poziom trudności:</label>
+            <select id="difficulty-select" onchange="generateBoard()">
+                <option value="normal">Normalny</option>
+                <option value="easy">Łatwy</option>
+            </select>
+        </div>
 
         <div id="bingo-board"></div>
         

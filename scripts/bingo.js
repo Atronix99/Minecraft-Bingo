@@ -112,6 +112,9 @@ function shuffle(array) {
 }
 
 function generateBoard(fixedItems = null) {
+    const difficultySelect = document.getElementById('difficulty-select');
+    const selectedMode = difficultySelect ? difficultySelect.value : 'normal';
+
     if (allItems.length === 0) {
         showNotification('Błąd: Brak wczytanych przedmiotów.', 3000);
         return; 
@@ -129,118 +132,231 @@ function generateBoard(fixedItems = null) {
         }
 
     } else {
-        const required_3 = BOARD_SIZE; 
-        const required_2 = 15; 
-        const required_1 = BOARD_SIZE * BOARD_SIZE - required_3 - required_2;
-
-        const itemsByWeight = {
-            1: allItems.filter(item => item.weight === 1),
-            2: allItems.filter(item => item.weight === 2),
-            3: allItems.filter(item => item.weight === 3)
-        };
-
-        const totalItems = BOARD_SIZE * BOARD_SIZE;
-        const usedIndices = { 1: [], 2: [], 3: [] };
-
-        const board = Array(BOARD_SIZE).fill(0).map(() => Array(BOARD_SIZE).fill(null));
-        
-        const getAvailableItems = (weight, count) => {
-            const availableItems = itemsByWeight[weight].filter((_, index) => !usedIndices[weight].includes(index));
-            shuffle(availableItems);
-            return availableItems.slice(0, count);
-        };
-        
-        if (itemsByWeight[3].length < required_3) {
-            boardElement.innerHTML = `Błąd: Za mało przedmiotów difficulty 3. Potrzeba ${required_3}.`;
-            showNotification(`Błąd: Za mało przedmiotów difficulty 3. Potrzeba ${required_3}.`, 5000);
-            return;
-        }
-
-        const pool3 = getAvailableItems(3, required_3);
-        
-        const col_indices = Array.from({ length: BOARD_SIZE }, (_, i) => i);
-        shuffle(col_indices); 
-        
-        for (let r = 0; r < BOARD_SIZE; r++) {
-            const c = col_indices[r]; 
-            const item = pool3[r];
+        if (selectedMode === 'easy') {
+            const required_2 = BOARD_SIZE * (BOARD_SIZE / 2);
+            const required_1 = BOARD_SIZE * (BOARD_SIZE / 2);
             
-            board[r][c] = item;
-            usedIndices[3].push(itemsByWeight[3].findIndex(i => i.name === item.name)); 
-        }
+            if (BOARD_SIZE % 2 !== 0) {
+                showNotification('Błąd: Tryb łatwy jest dostępny tylko dla parzystych rozmiarów planszy (np. 6x6).', 5000);
+                return;
+            }
 
-        const rowCount = { 1: Array(BOARD_SIZE).fill(0), 2: Array(BOARD_SIZE).fill(0) };
-        const colCount = { 1: Array(BOARD_SIZE).fill(0), 2: Array(BOARD_SIZE).fill(0) };
-        
-        const MIN_WEIGHT_1 = 2; 
-        const MAX_WEIGHT_1 = 3; 
-        const MIN_WEIGHT_2 = 2; 
-        const MAX_WEIGHT_2 = 3; 
+            const itemsByWeight = {
+                1: allItems.filter(item => item.weight === 1),
+                2: allItems.filter(item => item.weight === 2)
+            };
 
-        for (let r = 0; r < BOARD_SIZE; r++) {
-            for (let c = 0; c < BOARD_SIZE; c++) {
-                if (board[r][c] !== null) continue;
+            if (itemsByWeight[1].length < required_1 || itemsByWeight[2].length < required_2) {
+                showNotification('Błąd: Za mało przedmiotów difficulty 1 lub 2 dla trybu łatwego. Użyj trybu Normalnego.', 5000);
+                return;
+            }
 
-                const current_2 = board.flat().filter(i => i && i.weight === 2).length;
-                const current_1 = board.flat().filter(i => i && i.weight === 1).length;
-                const remainingCells = totalItems - board.flat().filter(i => i !== null).length;
-                
-                const needed_2 = required_2 - current_2;
-                const needed_1 = required_1 - current_1;
+            const board = Array(BOARD_SIZE).fill(0).map(() => Array(BOARD_SIZE).fill(null));
+            const rowCount = { 1: Array(BOARD_SIZE).fill(0), 2: Array(BOARD_SIZE).fill(0) };
+            const colCount = { 1: Array(BOARD_SIZE).fill(0), 2: Array(BOARD_SIZE).fill(0) };
 
-                let selectedWeight = null;
-                
-                const mustBe2Global = needed_2 > 0 && needed_2 === remainingCells; 
-                const mustBe2Row = rowCount[2][r] < MIN_WEIGHT_2 && rowCount[1][r] === MAX_WEIGHT_1; 
-                const mustBe2Col = colCount[2][c] < MIN_WEIGHT_2 && colCount[1][c] === MAX_WEIGHT_1; 
-                
-                const mustBe1Global = needed_1 > 0 && needed_1 === remainingCells; 
-                const mustBe1Row = rowCount[1][r] < MIN_WEIGHT_1 && rowCount[2][r] === MAX_WEIGHT_2; 
-                const mustBe1Col = colCount[1][c] < MIN_WEIGHT_1 && colCount[2][c] === MAX_WEIGHT_2; 
+            const usedIndices = { 1: [], 2: [] };
 
-                if (mustBe2Global || mustBe2Row || mustBe2Col) {
-                    selectedWeight = 2;
-                } else if (mustBe1Global || mustBe1Row || mustBe1Col) {
-                    selectedWeight = 1;
-                } else {
-                    const canBe2 = rowCount[2][r] < MAX_WEIGHT_2 && colCount[2][c] < MAX_WEIGHT_2 && needed_2 > 0;
-                    const canBe1 = rowCount[1][r] < MAX_WEIGHT_1 && colCount[1][c] < MAX_WEIGHT_1 && needed_1 > 0;
+            const getAvailableItem = (weight) => {
+                const itemIndex = itemsByWeight[weight].findIndex((_, index) => !usedIndices[weight].includes(index));
+                if (itemIndex > -1) {
+                    const item = itemsByWeight[weight][itemIndex];
+                    usedIndices[weight].push(itemIndex);
+                    return item;
+                }
+                return null;
+            };
 
-                    if (canBe2 && canBe1) {
-                         selectedWeight = Math.random() < 0.7 ? 2 : 1; 
-                    } else if (canBe2) {
+            shuffle(itemsByWeight[1]);
+            shuffle(itemsByWeight[2]);
+
+            const MAX_COUNT = BOARD_SIZE / 2;
+
+            for (let r = 0; r < BOARD_SIZE; r++) {
+                for (let c = 0; c < BOARD_SIZE; c++) {
+                    let selectedWeight = null;
+                    
+                    const count1r = rowCount[1][r];
+                    const count2r = rowCount[2][r];
+                    const count1c = colCount[1][c];
+                    const count2c = colCount[2][c];
+
+                    const mustBe2Row = count2r < MAX_COUNT && count1r === MAX_COUNT; 
+                    const mustBe2Col = count2c < MAX_COUNT && count1c === MAX_COUNT; 
+                    const mustBe1Row = count1r < MAX_COUNT && count2r === MAX_COUNT; 
+                    const mustBe1Col = count1c < MAX_COUNT && count2c === MAX_COUNT; 
+
+                    if (mustBe2Row || mustBe2Col) {
                         selectedWeight = 2;
-                    } else if (canBe1) {
+                    } else if (mustBe1Row || mustBe1Col) {
                         selectedWeight = 1;
                     } else {
-                        boardElement.innerHTML = 'Błąd: Niespełnione warunki alokacji 1/2. Zresetuj planszę.';
-                        showNotification('Błąd: Niespełnione warunki alokacji 1/2. Zresetuj planszę.', 5000);
-                        return;
-                    }
-                }
-                
-                if (getAvailableItems(selectedWeight, 1).length === 0) {
-                     const otherWeight = selectedWeight === 1 ? 2 : 1;
-                     if (getAvailableItems(otherWeight, 1).length > 0) {
-                         selectedWeight = otherWeight;
-                     } else {
-                         boardElement.innerHTML = 'Błąd: Wyczerpano dostępne przedmioty! Zresetuj planszę.';
-                         showNotification('Błąd: Wyczerpano dostępne przedmioty! Zresetuj planszę.', 5000);
-                         return;
-                     }
-                }
+                        const canBe2 = count2r < MAX_COUNT && count2c < MAX_COUNT;
+                        const canBe1 = count1r < MAX_COUNT && count1c < MAX_COUNT;
 
-                const itemPool = getAvailableItems(selectedWeight, 1);
-                const item = itemPool[0];
+                        if (canBe2 && canBe1) {
+                             const remaining1 = required_1 - usedIndices[1].length;
+                             const remaining2 = required_2 - usedIndices[2].length;
+                             
+                             if (remaining1 > 0 && remaining2 > 0) {
+                                selectedWeight = (remaining1 / (remaining1 + remaining2)) > Math.random() ? 1 : 2;
+                             } else if (remaining1 > 0) {
+                                selectedWeight = 1;
+                             } else if (remaining2 > 0) {
+                                selectedWeight = 2;
+                             } else {
+                                showNotification('Błąd: Nieoczekiwane wyczerpanie przedmiotów!', 5000);
+                                return;
+                             }
+                             
+                        } else if (canBe2) {
+                            selectedWeight = 2;
+                        } else if (canBe1) {
+                            selectedWeight = 1;
+                        } else {
+                            showNotification('Błąd: Niespełnione warunki 3x difficulty 1 i 3x difficulty 2. Zresetuj planszę.', 5000);
+                            return;
+                        }
+                    }
+                    
+                    const item = getAvailableItem(selectedWeight);
+                    
+                    if (!item) {
+                         const otherWeight = selectedWeight === 1 ? 2 : 1;
+                         const otherItem = getAvailableItem(otherWeight);
+
+                         if (otherItem && rowCount[otherWeight][r] < MAX_COUNT && colCount[otherWeight][c] < MAX_COUNT) {
+                             selectedWeight = otherWeight;
+                             board[r][c] = otherItem;
+                         } else {
+                             showNotification('Błąd: Wyczerpano dostępne przedmioty lub kolizja z rozkładem 3x3! Spróbuj ponownie.', 5000);
+                             return;
+                         }
+                    } else {
+                        board[r][c] = item;
+                    }
+
+                    rowCount[selectedWeight][r]++;
+                    colCount[selectedWeight][c]++;
+                }
+            }
+            finalItems = board.flat();
+
+
+        } else {
+            const required_3 = BOARD_SIZE; 
+            const required_2 = 15; 
+            const required_1 = BOARD_SIZE * BOARD_SIZE - required_3 - required_2;
+
+            const itemsByWeight = {
+                1: allItems.filter(item => item.weight === 1),
+                2: allItems.filter(item => item.weight === 2),
+                3: allItems.filter(item => item.weight === 3)
+            };
+
+            const totalItems = BOARD_SIZE * BOARD_SIZE;
+            const usedIndices = { 1: [], 2: [], 3: [] };
+
+            const board = Array(BOARD_SIZE).fill(0).map(() => Array(BOARD_SIZE).fill(null));
+            
+            const getAvailableItems = (weight, count) => {
+                const availableItems = itemsByWeight[weight].filter((_, index) => !usedIndices[weight].includes(index));
+                shuffle(availableItems);
+                return availableItems.slice(0, count);
+            };
+            
+            if (itemsByWeight[3].length < required_3) {
+                boardElement.innerHTML = `Błąd: Za mało przedmiotów difficulty 3. Potrzeba ${required_3}.`;
+                showNotification(`Błąd: Za mało przedmiotów difficulty 3. Potrzeba ${required_3}.`, 5000);
+                return;
+            }
+
+            const pool3 = getAvailableItems(3, required_3);
+            
+            const col_indices = Array.from({ length: BOARD_SIZE }, (_, i) => i);
+            shuffle(col_indices); 
+            
+            for (let r = 0; r < BOARD_SIZE; r++) {
+                const c = col_indices[r]; 
+                const item = pool3[r];
                 
                 board[r][c] = item;
-                rowCount[selectedWeight][r]++;
-                colCount[selectedWeight][c]++;
-                
-                usedIndices[selectedWeight].push(itemsByWeight[selectedWeight].findIndex(i => i.name === item.name)); 
+                usedIndices[3].push(itemsByWeight[3].findIndex(i => i.name === item.name)); 
             }
+
+            const rowCount = { 1: Array(BOARD_SIZE).fill(0), 2: Array(BOARD_SIZE).fill(0) };
+            const colCount = { 1: Array(BOARD_SIZE).fill(0), 2: Array(BOARD_SIZE).fill(0) };
+            
+            const MIN_WEIGHT_1 = 2; 
+            const MAX_WEIGHT_1 = 3; 
+            const MIN_WEIGHT_2 = 2; 
+            const MAX_WEIGHT_2 = 3; 
+
+            for (let r = 0; r < BOARD_SIZE; r++) {
+                for (let c = 0; c < BOARD_SIZE; c++) {
+                    if (board[r][c] !== null) continue;
+
+                    const current_2 = board.flat().filter(i => i && i.weight === 2).length;
+                    const current_1 = board.flat().filter(i => i && i.weight === 1).length;
+                    const remainingCells = totalItems - board.flat().filter(i => i !== null).length;
+                    
+                    const needed_2 = required_2 - current_2;
+                    const needed_1 = required_1 - current_1;
+
+                    let selectedWeight = null;
+                    
+                    const mustBe2Global = needed_2 > 0 && needed_2 === remainingCells; 
+                    const mustBe2Row = rowCount[2][r] < MIN_WEIGHT_2 && rowCount[1][r] === MAX_WEIGHT_1; 
+                    const mustBe2Col = colCount[2][c] < MIN_WEIGHT_2 && colCount[1][c] === MAX_WEIGHT_1; 
+                    
+                    const mustBe1Global = needed_1 > 0 && needed_1 === remainingCells; 
+                    const mustBe1Row = rowCount[1][r] < MIN_WEIGHT_1 && rowCount[2][r] === MAX_WEIGHT_2; 
+                    const mustBe1Col = colCount[1][c] < MIN_WEIGHT_1 && colCount[2][c] === MAX_WEIGHT_2; 
+
+                    if (mustBe2Global || mustBe2Row || mustBe2Col) {
+                        selectedWeight = 2;
+                    } else if (mustBe1Global || mustBe1Row || mustBe1Col) {
+                        selectedWeight = 1;
+                    } else {
+                        const canBe2 = rowCount[2][r] < MAX_WEIGHT_2 && colCount[2][c] < MAX_WEIGHT_2 && needed_2 > 0;
+                        const canBe1 = rowCount[1][r] < MAX_WEIGHT_1 && colCount[1][c] < MAX_WEIGHT_1 && needed_1 > 0;
+
+                        if (canBe2 && canBe1) {
+                             selectedWeight = Math.random() < 0.7 ? 2 : 1; 
+                        } else if (canBe2) {
+                            selectedWeight = 2;
+                        } else if (canBe1) {
+                            selectedWeight = 1;
+                        } else {
+                            boardElement.innerHTML = 'Błąd: Niespełnione warunki alokacji 1/2. Zresetuj planszę.';
+                            showNotification('Błąd: Niespełnione warunki alokacji 1/2. Zresetuj planszę.', 5000);
+                            return;
+                        }
+                    }
+                    
+                    if (getAvailableItems(selectedWeight, 1).length === 0) {
+                         const otherWeight = selectedWeight === 1 ? 2 : 1;
+                         if (getAvailableItems(otherWeight, 1).length > 0) {
+                             selectedWeight = otherWeight;
+                         } else {
+                             boardElement.innerHTML = 'Błąd: Wyczerpano dostępne przedmioty! Zresetuj planszę.';
+                             showNotification('Błąd: Wyczerpano dostępne przedmioty! Zresetuj planszę.', 5000);
+                             return;
+                         }
+                    }
+
+                    const itemPool = getAvailableItems(selectedWeight, 1);
+                    const item = itemPool[0];
+                    
+                    board[r][c] = item;
+                    rowCount[selectedWeight][r]++;
+                    colCount[selectedWeight][c]++;
+                    
+                    usedIndices[selectedWeight].push(itemsByWeight[selectedWeight].findIndex(i => i.name === item.name)); 
+                }
+            }
+            finalItems = board.flat();
         }
-        finalItems = board.flat();
     }
     
     let delay = 0;
