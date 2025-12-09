@@ -15,9 +15,8 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     width: 100%;
-    max-width: 550px; 
     margin: 0 auto;
 }
 h1 {
@@ -130,20 +129,21 @@ h1 {
 }
 
 .button-group button {
-    padding: 10px 15px;
+    flex: 1;
+    padding: 12px;
     font-size: 1.1em;
     background-color: #7289DA;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.2s;
-    flex-basis: 200px;
+    transition: all 0.2s ease;
     text-align: center;
 }
 
 .button-group button:hover {
     background-color: #677BC4;
+    transform: translateY(-2px);
 }
 
 .import-export-section {
@@ -324,4 +324,66 @@ h1 {
 .notification-popup.hide .notification-content {
     transform: translateY(-100px); 
     transition: transform 0.3s ease-in;
+}
+
+:root {
+    --board-size: 6;
+    --gap-size: 5px;
+    --max-cell-size: 85px;
+}
+
+#bingo-board-wrapper {
+    width: 100%;
+    max-width: calc(var(--max-cell-size) * var(--board-size) + var(--gap-size) * (var(--board-size) - 1) + 4px);
+    overflow: hidden; 
+    margin-top: 10px;
+    padding-bottom: 5px; 
+}
+
+#bingo-board {
+    display: grid;
+    grid-template-columns: repeat(var(--board-size), var(--max-cell-size));
+    gap: var(--gap-size);
+    max-width: 100%; 
+    margin: 0 auto;
+}
+
+.item-cell {
+    width: var(--max-cell-size); 
+    height: var(--max-cell-size); 
+}
+
+@media (max-width: 600px) {
+    :root {
+        --cell-size-vw: 14vw; 
+    }
+    
+    #bingo-board-wrapper {
+        padding: 0 10px;
+        box-sizing: border-box;
+    }
+
+    #bingo-board {
+        grid-template-columns: repeat(var(--board-size), var(--cell-size-vw));
+        gap: 0.5vw;
+        width: 100%;
+    }
+    .item-cell {
+        width: var(--cell-size-vw); 
+        height: var(--cell-size-vw); 
+    }
+    .item-name {
+        font-size: 2vw;
+    }
+}
+
+@media (max-width: 500px) {
+    .button-group button {
+        flex-basis: auto; 
+        font-size: 1em;
+    }
+    .button-group {
+        flex-direction: column;
+        gap: 10px;
+    }
 }

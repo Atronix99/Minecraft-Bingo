@@ -57,10 +57,11 @@ input[type="number"] {
     display: flex;
     gap: 10px;
     margin-bottom: 30px;
+    justify-content: center;
 }
 
 .button-group button {
-    flex-grow: 1;
+    flex: 1;
     padding: 12px;
     font-size: 1em;
     background-color: #7289DA;
@@ -68,11 +69,12 @@ input[type="number"] {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: all 0.2s ease;
 }
 
 .button-group button:hover {
     background-color: #677BC4;
+    transform: translateY(-2px);
 }
 
 #results {
