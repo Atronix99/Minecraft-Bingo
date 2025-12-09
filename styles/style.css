@@ -334,7 +334,7 @@ h1 {
 
 #bingo-board-wrapper {
     width: 100%;
-    max-width: calc(var(--max-cell-size) * var(--board-size) + var(--gap-size) * (var(--board-size) - 1) + 4px);
+    max-width: calc(var(--max-cell-size) * var(--board-size) + var(--gap-size) * (var(--board-size) - 1));
     overflow: hidden; 
     margin-top: 10px;
     padding-bottom: 5px; 

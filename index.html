@@ -4,33 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minecraft Bingo</title>
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script> 
+    <link rel="icon" href="favicon.ico" type="image/x-icon"> <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script> 
     <script defer src="./scripts/bingo.js"></script>
     <link rel="stylesheet" href="./styles/style.css">
-    <script defer src="scripts/bingo.js"></script>
-    <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
 </head>
 <body>
-    <div class="container">
+    <div class="container" data-aos="fade-down">
         <h1>Minecraft Bingo</h1>
         
-        <div class="difficulty-select-group">
+        <div class="difficulty-select-group" data-aos="fade-right" data-aos-delay="100">
             <label for="difficulty-select">Wybierz poziom trudności:</label>
             <select id="difficulty-select" onchange="generateBoard()">
                 <option value="normal">Normalny</option>
                 <option value="easy">Łatwy</option>
             </select>
         </div>
-        <div id="bingo-board-wrapper">
+        <div id="bingo-board-wrapper" data-aos="fade-left" data-aos-delay="200">
             <div id="bingo-board"></div>
         </div>
         
-        <div class="button-group">
+        <div class="button-group" data-aos="fade-right" data-aos-delay="300">
             <button onclick="generateBoard()">Generuj nową planszę</button>
             <button id="download-board-btn">Pobierz planszę jako obraz</button>
         </div>
         
-        <div class="import-export-section">
+        <div class="import-export-section" data-aos="fade-left" data-aos-delay="400">
             <h2>Udostępnianie planszy</h2>
             <textarea id="board-code-input" rows="3" placeholder="Wklej tutaj kod planszy, aby ją zaimportować..."></textarea>
             <div class="button-group share-buttons">
@@ -39,7 +38,7 @@
             </div>
         </div>
         
-        <a href="losowanie.html" class="other-mode-link">Przejdź do Generatora Drużyn</a>
+        <a href="losowanie.html" class="other-mode-link" data-aos="fade" data-aos-delay="500">Przejdź do Generatora Drużyn</a>
     </div>
 
     <div id="custom-popup" class="popup-container main-popup">
@@ -57,5 +56,14 @@
         </div>
     </div>
     
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+      AOS.init({
+          duration: 1000,
+          easing: 'ease-in-out',
+          once: true,
+          disable: 'phone'
+      });
+    </script>
 </body>
 </html>

@@ -4,17 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Losowanie Graczy i Drużyn</title>
-    <link rel="stylesheet" href="styles/losowanie.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon"> <link rel="stylesheet" href="styles/losowanie.css">
     <script defer src="scripts/losowanie.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0-400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
 </head>
 <body>
-    <div class="container">
+    <div class="container" data-aos="fade-down">
         <h1>Generator Drużyn i Losowanie</h1>
 
-        <div class="input-section">
+        <div class="input-section" data-aos="fade-right" data-aos-delay="100">
             <label for="player-input">Wprowadź listę graczy (po jednym na linię):</label>
             <textarea id="player-input" rows="8" placeholder="Gracz 1&#10;Gracz 2&#10;Gracz 3..."></textarea>
             
@@ -22,17 +24,27 @@
             <input type="number" id="team-size" value="2" min="1">
         </div>
 
-        <div class="button-group">
+        <div class="button-group" data-aos="fade-left" data-aos-delay="200">
             <button onclick="drawTeams()">Losuj Drużyny</button>
             <button onclick="drawSingle()">Losuj Jedną Osobę</button>
         </div>
 
-        <div class="results-section">
+        <div class="results-section" data-aos="fade-right" data-aos-delay="300">
             <h2>Wyniki Losowania</h2>
             <div id="results">Wprowadź graczy i wylosuj drużyny lub pojedynczą osobę.</div>
         </div>
         
-        <a href="index.html" class="back-link">Powrót do Bingo</a>
+        <a href="index.html" class="back-link" data-aos="fade" data-aos-delay="500" data-aos-anchor-placement="top-bottom">Powrót do Bingo</a>
     </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+      AOS.init({
+          duration: 1000,
+          easing: 'ease-in-out',
+          once: true,
+          disable: 'phone'
+      });
+    </script>
 </body>
 </html>
