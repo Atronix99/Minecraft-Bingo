@@ -362,10 +362,14 @@ function generateBoard(fixedItems = null) {
     let delay = 0;
     const delayIncrement = 25;
 
-    for (const item of finalItems) {
+    for (let i = 0; i < finalItems.length; i++) { 
+        const item = finalItems[i];
         const cell = document.createElement('div');
         cell.classList.add('item-cell');
         cell.setAttribute('data-alt', item.name);
+        
+        const columnIndex = i % BOARD_SIZE; 
+        const isLastColumn = columnIndex === BOARD_SIZE - 1; 
         
         const content = item.image ? 
             `<img src="${item.image}" alt="${item.name}" class="item-image">` :
@@ -376,7 +380,15 @@ function generateBoard(fixedItems = null) {
         
         cell.addEventListener('mousemove', (e) => {
             tooltipElement.textContent = item.name;
-            tooltipElement.style.left = (e.pageX + 10) + 'px';
+            
+            if (isLastColumn && window.innerWidth < 600) { 
+                tooltipElement.style.right = (window.innerWidth - e.pageX + 15) + 'px'; 
+                tooltipElement.style.left = 'auto';
+            } else {
+                tooltipElement.style.left = (e.pageX + 10) + 'px';
+                tooltipElement.style.right = 'auto';
+            }
+
             tooltipElement.style.top = (e.pageY + 10) + 'px';
             tooltipElement.style.display = 'block';
         });
@@ -392,7 +404,6 @@ function generateBoard(fixedItems = null) {
         delay += delayIncrement;
     }
 }
-
 
 function exportBoard() {
     const cells = boardElement.querySelectorAll('.item-cell');

@@ -1,5 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Open Sans', sans-serif;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -9,13 +11,15 @@ body {
     margin: 0;
     padding: 20px;
     min-height: 100vh;
+    overflow-x: hidden; 
+    box-sizing: border-box;
 }
 .container {
     text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
     width: 100%;
     margin: 0 auto;
 }
@@ -190,6 +194,8 @@ h1 {
     z-index: 1000;
     font-size: 14px;
     white-space: nowrap;
+    left: auto;
+    right: auto;
 }
 .other-mode-link {
     display: block;
@@ -333,7 +339,6 @@ h1 {
 }
 
 #bingo-board-wrapper {
-    width: 100%;
     max-width: calc(var(--max-cell-size) * var(--board-size) + var(--gap-size) * (var(--board-size) - 1));
     overflow: hidden; 
     margin-top: 10px;
