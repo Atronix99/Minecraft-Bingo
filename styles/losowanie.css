@@ -1,19 +1,37 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 
+:root {
+    --color-background-primary: #36393F; 
+    --color-background-secondary: #2F3136; 
+    --color-element-primary: #40444B; 
+    --color-element-secondary: #4E525A; 
+    --color-text-light: #DCDDDE; 
+    --color-text-medium: #99AAB5; 
+    --color-brand-blue: #7289DA; 
+    --color-brand-blue-hover: #677BC4; 
+    --color-success: #43B581; 
+    --color-error-warning: #FAA61A; 
+
+    --animation-duration-fast: 0.2s;
+    --animation-duration-medium: 0.4s;
+    --animation-duration-slow: 10s; 
+    --animation-timing-ease: ease;
+}
+
 body {
     font-family: 'Open Sans', sans-serif;
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    background-color: #36393F;
-    color: #DCDDDE;
+    background-color: var(--color-background-primary); 
+    color: var(--color-text-light); 
     margin: 0;
     padding: 20px;
     min-height: 100vh;
 }
 
 .container {
-    background-color: #2F3136;
+    background-color: var(--color-background-secondary); 
     padding: 30px;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
@@ -23,7 +41,7 @@ body {
 }
 
 h1 {
-    color: #7289DA;
+    color: var(--color-brand-blue); 
     margin-bottom: 20px;
 }
 
@@ -37,16 +55,17 @@ label {
     margin-top: 10px;
     margin-bottom: 5px;
     font-weight: bold;
+    color: var(--color-text-light); 
 }
 
 textarea, input[type="number"] {
     width: 100%;
     padding: 10px;
     box-sizing: border-box;
-    border: 1px solid #40444B;
+    border: 1px solid var(--color-element-primary); 
     border-radius: 4px;
-    background-color: #40444B;
-    color: #DCDDDE;
+    background-color: var(--color-element-primary); 
+    color: var(--color-text-light); 
     resize: vertical;
 }
 
@@ -66,52 +85,69 @@ input[type="number"] {
     flex: 1;
     padding: 12px;
     font-size: 1em;
-    background-color: #7289DA;
+    background-color: var(--color-brand-blue); 
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all var(--animation-duration-fast) var(--animation-timing-ease); 
 }
 
 .button-group button:hover {
-    background-color: #677BC4;
+    background-color: var(--color-brand-blue-hover); 
     transform: translateY(-2px);
 }
 
+.results-section h2 {
+    color: var(--color-text-light); 
+    border-bottom: 1px solid var(--color-element-secondary); 
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+}
+
 #results {
-    background-color: #40444B;
-    border: 1px solid #4E525A;
-    padding: 15px;
-    border-radius: 4px;
-    min-height: 100px;
-    text-align: left;
     white-space: pre-wrap;
+    text-align: center;
+    padding: 15px;
+    background-color: var(--color-element-primary); 
+    border-radius: 4px;
+    border: 1px solid var(--color-element-secondary); 
+    color: var(--color-text-light); 
 }
 
 .team-name {
-    color: #7289DA;
     font-weight: bold;
-    margin-top: 10px;
+    color: var(--color-success); 
     display: block;
-    font-size: 1.1em;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+#results .team-name:first-child {
+    margin-top: 0;
 }
 
-.single-winner {
-    color: #43B581;
-    font-size: 1.5em;
-    font-weight: bold;
-    text-align: center;
+#results [style*="color: #FAA61A"] {
+    color: var(--color-error-warning) !important; 
 }
 
 .back-link {
     display: inline-block;
-    margin-top: 20px;
-    color: #99AAB5;
+    margin-top: 25px;
+    color: var(--color-text-medium); 
     text-decoration: none;
-    transition: color 0.2s;
+    transition: color var(--animation-duration-fast); 
 }
 
 .back-link:hover {
-    color: #DCDDDE;
+    color: var(--color-text-light); 
+}
+
+@media (max-width: 500px) {
+    .container {
+        padding: 20px;
+    }
+    .button-group {
+        flex-direction: column;
+        gap: 10px;
+    }
 }

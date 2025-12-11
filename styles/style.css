@@ -1,13 +1,41 @@
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 
+:root {
+    
+    --color-background-primary: #36393F;
+    --color-background-secondary: #2F3136;
+    --color-element-primary: #40444B; 
+    --color-element-secondary: #4E525A; 
+    --color-text-light: #DCDDDE; 
+    --color-text-medium: #99AAB5; 
+    --color-brand-blue: #7289DA; 
+    --color-brand-blue-hover: #677BC4; 
+    --color-success: #43B581; 
+    --color-success-hover: #3AA675;
+    --color-completion: #2D6A4F; 
+    --color-completion-border: #1B4332;
+    --color-win-line: #A53F2B; 
+    --color-win-line-border: #782D20;
+    --color-error-warning: #FAA61A; 
+
+    --board-size: 6;
+    --gap-size: 5px;
+    --max-cell-size: 85px; 
+    
+    --animation-duration-fast: 0.2s;
+    --animation-duration-medium: 0.4s;
+    --animation-duration-slow: 10s; 
+    --animation-timing-ease: ease;
+}
+
 body {
     font-family: 'Open Sans', sans-serif;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center; 
-    background-color: #36393F;
-    color: #DCDDDE;
+    background-color: var(--color-background-primary); 
+    color: var(--color-text-light);
     margin: 0;
     padding: 20px;
     min-height: 100vh;
@@ -24,6 +52,7 @@ body {
     margin: 0 auto;
 }
 h1 {
+    color: var(--color-brand-blue); 
     margin-bottom: 10px;
 }
 
@@ -36,29 +65,38 @@ h1 {
 
 .difficulty-select-group label {
     font-size: 1.1em;
-    color: #DCDDDE;
+    color: var(--color-text-light); 
 }
 
 #difficulty-select {
     padding: 8px 12px;
-    border: 2px solid #40444B;
+    border: 2px solid var(--color-element-primary); 
     border-radius: 5px;
-    background-color: #4E525A;
-    color: #DCDDDE;
+    background-color: var(--color-element-secondary); 
+    color: var(--color-text-light); 
     font-size: 1.0em;
     cursor: pointer;
+    transition: border-color var(--animation-duration-fast) var(--animation-timing-ease);
 }
 
 #difficulty-select:focus {
-    border-color: #7289DA;
+    border-color: var(--color-brand-blue); 
     outline: none;
+}
+
+#bingo-board-wrapper {
+    max-width: calc(var(--max-cell-size) * var(--board-size) + var(--gap-size) * (var(--board-size) - 1));
+    overflow: hidden; 
+    margin-top: 10px;
+    padding-bottom: 5px; 
 }
 
 #bingo-board {
     display: grid;
-    gap: 5px;
-    max-width: 800px;
-    margin-top: 10px;
+    grid-template-columns: repeat(var(--board-size), var(--max-cell-size));
+    gap: var(--gap-size);
+    max-width: 100%; 
+    margin: 0 auto;
     position: relative;
 }
 
@@ -74,38 +112,40 @@ h1 {
 }
 
 .item-cell {
-    background-color: #40444B;
-    border: 2px solid #2F3136;
+    background-color: var(--color-element-primary); 
+    border: 2px solid var(--color-background-secondary); 
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     cursor: pointer;
     position: relative;
-    transition: transform 0.2s, background-color 0.2s;
+    transition: transform var(--animation-duration-fast), background-color var(--animation-duration-fast);
     text-align: center;
     box-sizing: border-box;
     padding: 5px;
     opacity: 0; 
     transform: scale(0.5); 
+    width: var(--max-cell-size); 
+    height: var(--max-cell-size); 
 }
 
 .item-cell.animate-in {
-    animation: fadeIn 0.4s ease-out forwards;
+    animation: fadeIn var(--animation-duration-medium) ease-out forwards;
 }
 
 .item-cell:hover {
     transform: scale(1.03);
-    background-color: #4E525A;
+    background-color: var(--color-element-secondary); 
 }
 .item-cell.completed {
-    background-color: #2D6A4F;
-    border-color: #1B4332;
+    background-color: var(--color-completion); 
+    border-color: var(--color-completion-border); 
 }
 
 .item-cell.win-line {
-    background-color: #A53F2B;
-    border-color: #782D20;
+    background-color: var(--color-win-line); 
+    border-color: var(--color-win-line-border); 
 }
 
 .item-image {
@@ -132,17 +172,17 @@ h1 {
     flex: 1;
     padding: 12px;
     font-size: 1.1em;
-    background-color: #7289DA;
+    background-color: var(--color-brand-blue); 
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all var(--animation-duration-fast) var(--animation-timing-ease);
     text-align: center;
 }
 
 .button-group button:hover {
-    background-color: #677BC4;
+    background-color: var(--color-brand-blue-hover); 
     transform: translateY(-2px);
 }
 
@@ -151,13 +191,13 @@ h1 {
     max-width: 450px;
     margin-top: 30px;
     padding: 15px;
-    background-color: #2F3136;
+    background-color: var(--color-background-secondary); 
     border-radius: 8px;
 }
 
 .import-export-section h2 {
     font-size: 1.2em;
-    color: #99AAB5;
+    color: var(--color-text-medium); 
     margin-top: 0;
 }
 
@@ -165,10 +205,10 @@ h1 {
     width: 100%;
     box-sizing: border-box;
     padding: 10px;
-    border: 1px solid #40444B;
+    border: 1px solid var(--color-element-primary); 
     border-radius: 4px;
-    background-color: #40444B;
-    color: #DCDDDE;
+    background-color: var(--color-element-primary); 
+    color: var(--color-text-light); 
     resize: none;
     font-family: monospace;
     font-size: 0.9em;
@@ -196,13 +236,13 @@ h1 {
 .other-mode-link {
     display: block;
     margin-top: 15px;
-    color: #99AAB5;
+    color: var(--color-text-medium); 
     text-decoration: none;
-    transition: color 0.2s;
+    transition: color var(--animation-duration-fast);
 }
 
 .other-mode-link:hover {
-    color: #DCDDDE;
+    color: var(--color-text-light); 
 }
 
 .popup-container {
@@ -228,7 +268,7 @@ h1 {
 }
 
 .popup-container.main-popup .popup-content {
-    background-color: #2F3136;
+    background-color: var(--color-background-secondary); 
     padding: 25px;
     border-radius: 8px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
@@ -250,20 +290,20 @@ h1 {
 }
 
 .popup-content h3 {
-    color: #7289DA;
+    color: var(--color-brand-blue); 
     margin-top: 0;
     margin-bottom: 10px;
     font-size: 1.3em;
 }
 
 #popup-board-code {
-    background-color: #40444B;
+    background-color: var(--color-element-primary); 
     padding: 10px;
     border-radius: 4px;
     word-break: break-all;
     font-family: monospace;
     font-size: 0.9em;
-    border: 1px solid #4E525A;
+    border: 1px solid var(--color-element-secondary); 
     display: block;
 }
 
@@ -273,28 +313,28 @@ h1 {
     right: 15px;
     font-size: 24px;
     font-weight: bold;
-    color: #99AAB5;
+    color: var(--color-text-medium); 
     cursor: pointer;
-    transition: color 0.2s;
+    transition: color var(--animation-duration-fast);
 }
 
 .close-btn:hover {
-    color: #DCDDDE;
+    color: var(--color-text-light); 
 }
 
 .popup-content button {
     margin-top: 15px;
     padding: 10px 20px;
-    background-color: #43B581; 
+    background-color: var(--color-success); 
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: background-color var(--animation-duration-fast);
 }
 
 .popup-content button:hover {
-    background-color: #3AA675;
+    background-color: var(--color-success-hover); 
 }
 
 .notification-popup {
@@ -307,7 +347,7 @@ h1 {
 }
 
 .notification-content {
-    background-color: #7289DA; 
+    background-color: var(--color-brand-blue); 
     color: white;
     padding: 12px 25px;
     border-radius: 5px;
@@ -339,32 +379,6 @@ h1 {
 
 .bingo-line.show {
     opacity: 1;
-}
-
-:root {
-    --board-size: 6;
-    --gap-size: 5px;
-    --max-cell-size: 85px;
-}
-
-#bingo-board-wrapper {
-    max-width: calc(var(--max-cell-size) * var(--board-size) + var(--gap-size) * (var(--board-size) - 1));
-    overflow: hidden; 
-    margin-top: 10px;
-    padding-bottom: 5px; 
-}
-
-#bingo-board {
-    display: grid;
-    grid-template-columns: repeat(var(--board-size), var(--max-cell-size));
-    gap: var(--gap-size);
-    max-width: 100%; 
-    margin: 0 auto;
-}
-
-.item-cell {
-    width: var(--max-cell-size); 
-    height: var(--max-cell-size); 
 }
 
 @media (max-width: 600px) {
