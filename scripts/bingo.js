@@ -376,7 +376,41 @@ function generateBoard(fixedItems = null) {
             `<span class="item-name">${item.name}</span>`;
 
         cell.innerHTML = content;
-        cell.addEventListener('click', () => cell.classList.toggle('completed'));
+        cell.addEventListener('click', () => {
+            cell.classList.toggle('completed');
+            checkWinCondition();
+        });
+
+        function checkWinCondition() {
+            const cells = Array.from(boardElement.querySelectorAll('.item-cell'));
+            if (cells.length === 0) return;
+
+            const board = Array(BOARD_SIZE).fill(0).map((_, i) => 
+                cells.slice(i * BOARD_SIZE, (i + 1) * BOARD_SIZE)
+            );
+
+            cells.forEach(cell => cell.classList.remove('win-line'));
+
+            const completedLines = [];
+            
+            for (let r = 0; r < BOARD_SIZE; r++) {
+                if (board[r].every(cell => cell.classList.contains('completed'))) {
+                    completedLines.push(board[r]);
+                }
+            }
+
+            for (let c = 0; c < BOARD_SIZE; c++) {
+                const column = [];
+                for (let r = 0; r < BOARD_SIZE; r++) {
+                    column.push(board[r][c]);
+                }
+                if (column.every(cell => cell.classList.contains('completed'))) {
+                    completedLines.push(column);
+                }
+            }
+
+            completedLines.flat().forEach(cell => cell.classList.add('win-line'));
+        }
         
         cell.addEventListener('mousemove', (e) => {
             tooltipElement.textContent = item.name;
